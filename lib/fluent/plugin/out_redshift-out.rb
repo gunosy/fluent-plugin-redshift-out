@@ -314,6 +314,10 @@ class RedshiftOutput < BufferedOutput
         conn.exec(sql)
       end
     rescue PG::Error => e
+      unless @connection.nil?
+        close
+      end
+      connect_start
       raise RedshiftError.new(e)
     ensure
       conn.close if conn && @connection.nil?
